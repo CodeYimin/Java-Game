@@ -2,20 +2,22 @@ package map;
 
 import java.awt.Color;
 
+import core.GameBehaviour.GameBehaviourStart;
 import entities.Object;
 import rendering.RectangleRenderer2D;
 import util.Vector;
 
-public class MapRenderer extends Object {
+public class MapRenderer extends Object implements GameBehaviourStart {
   private int[][] mapLayout = MapLayouts.getMainLayout();
 
   public MapRenderer() {
-    addTiles();
   }
 
-  private void addTiles() {
-    for (int row = 0; row < mapLayout.length; row++) {
-      for (int col = 0; col < mapLayout[row].length; col++) {
+  public void start () {
+    int height = mapLayout.length;
+    for (int row = 0; row < height; row++) {
+      int rowWidth = mapLayout[row].length;
+      for (int col = 0; col < rowWidth; col++) {
         if (mapLayout[row][col] == 0) {
           continue;
         }
@@ -23,12 +25,10 @@ public class MapRenderer extends Object {
         final float tileWidth = 1;
         Tile tile = new Tile(
           new Vector(
-            row + tileWidth / 2 - mapLayout.length / 2, 
-            col + tileWidth / 2 - mapLayout[row].length / 2
+            col - (rowWidth / 2) + (tileWidth / 2),
+            height - row - (height / 2) - (tileWidth / 2)
           )
         );
-        tile.addShapeRenderer(new RectangleRenderer2D(Vector.one, Color.BLACK, Vector.zero));
-        tile.addShapeRenderer(new RectangleRenderer2D(Vector.one.multiply(0.9), Color.MAGENTA, Vector.zero));
 
         instantiate(tile);
       }

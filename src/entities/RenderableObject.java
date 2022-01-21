@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import rendering.ShapeRenderer2D;
 
-public class RenderedObject extends GameObject {
+public class RenderableObject extends GameObject {
   private final ArrayList<ShapeRenderer2D> shapeRenderers = new ArrayList<>();
 
   public ArrayList<ShapeRenderer2D> getShapeRenderers() {
@@ -23,10 +23,10 @@ public class RenderedObject extends GameObject {
     this.shapeRenderers.remove(shapeRenderer);
   }
 
-  public RenderedObject(ArrayList<ShapeRenderer2D> shapeRenderers) {
+  public RenderableObject(ArrayList<ShapeRenderer2D> shapeRenderers) {
     this.shapeRenderers.addAll(shapeRenderers);
   }
 
-  public RenderedObject() {
+  public RenderableObject() {
   }
 }

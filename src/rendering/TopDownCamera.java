@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.RectangularShape;
 
-import entities.RenderedObject;
+import entities.RenderableObject;
 import util.Vector;
 
 public class TopDownCamera extends Camera {
@@ -38,13 +38,13 @@ public class TopDownCamera extends Camera {
 
     Vector myPosition = getTransform().getPosition();
 
-    RenderedObject[] renderedObjects = getObjects()
+    RenderableObject[] renderedObjects = getObjects()
       .stream()
-      .filter(RenderedObject.class::isInstance)
-      .map(RenderedObject.class::cast)
-      .toArray(RenderedObject[]::new);
+      .filter(RenderableObject.class::isInstance)
+      .map(RenderableObject.class::cast)
+      .toArray(RenderableObject[]::new);
 
-    for (RenderedObject renderedObject : renderedObjects) {
+    for (RenderableObject renderedObject : renderedObjects) {
 
       Vector deltaPosition = renderedObject
         .getTransform()

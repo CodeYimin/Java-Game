@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import collision.CollisionManager;
 import core.Time;
 import core.GameBehaviour.GameBehaviourPreUpdate;
 import core.GameBehaviour.GameBehaviourStart;
@@ -30,11 +31,14 @@ public class GamePanel extends JPanel {
     Object.instantiate(player);
 
     Camera camera = new TopDownCamera();
-    camera.setTransform(player.getTransform());
+    camera.setObjectFollowing(player);
     Object.instantiate(camera);
 
     MapRenderer mapRenderer = new MapRenderer();
     Object.instantiate(mapRenderer);
+
+    CollisionManager collisionManager = new CollisionManager();
+    Object.instantiate(collisionManager);
   }
 
   private void resetGraphics(Graphics graphics) {
@@ -54,42 +58,31 @@ public class GamePanel extends JPanel {
 
   @Override
   public void paintComponent(Graphics graphics) {
+    super.paintComponent(graphics);
     resetGraphics(graphics);
 
-    final ArrayList<Object> objects = Object.getObjects();
-
     if (getIsFirstRender()) {
-      for (Object object : objects) {
-        if (object instanceof GameBehaviourStart) {
-          GameBehaviourStart gameBehaviour = (GameBehaviourStart) object;
-          gameBehaviour.start();
-        }
-      }
+      Object.getObjectsByType(GameBehaviourStart.class)
+        .stream()
+        .forEach(object -> object.start());
+
+      Object.getObjectsByType(InputManageable.class)
+        .stream()
+        .map(object -> object.getInputManager())
+        .forEach(this::addKeyListener);
     }
 
-    for (Object object : objects) {
-      if (object instanceof GameBehaviourPreUpdate) {
-        GameBehaviourPreUpdate gameBehaviour = (GameBehaviourPreUpdate) object;
-        gameBehaviour.preUpdate();
-      }
-    }
-    
-    for (Object object : objects) {
-      if (object instanceof GameBehaviourUpdate) {
-        GameBehaviourUpdate gameBehaviour = (GameBehaviourUpdate) object;
-        gameBehaviour.update();
-      }
+    Object.getObjectsByType(GameBehaviourPreUpdate.class)
+      .stream()
+      .forEach(object -> object.preUpdate());
 
-      if (object instanceof InputManageable) {
-        final InputManageable listener = (InputManageable) object;
-        addKeyListener(listener.getInputManager());
-      }
+    Object.getObjectsByType(GameBehaviourUpdate.class)
+      .stream()
+      .forEach(object -> object.update());
 
-      if (object instanceof Drawable) {
-        final Drawable drawable = (Drawable) object;
-        drawable.draw(graphics, getSize());
-      }
-    }
+    Object.getObjectsByType(Drawable.class)
+      .stream()
+      .forEach(object -> object.draw(graphics, getSize()));
 
     setIsFirstRender(false);
   }

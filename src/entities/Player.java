@@ -3,6 +3,7 @@ package entities;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import collision.RectangleCollider2D;
 import core.Time;
 import core.GameBehaviour.GameBehaviourUpdate;
 import input.InputManageable;
@@ -11,8 +12,9 @@ import input.InputMap;
 import rendering.RectangleRenderer2D;
 import util.Vector;
 
-public class Player extends RenderedObject implements GameBehaviourUpdate, InputManageable {
+public class Player extends CollidableObject implements GameBehaviourUpdate, InputManageable {
   private float speed = 5;
+  private Vector velocity;
   private InputManager inputManager = new InputManager();
 
   public float getSpeed() {
@@ -21,6 +23,14 @@ public class Player extends RenderedObject implements GameBehaviourUpdate, Input
 
   public void setSpeed(float speed) {
     this.speed = speed;
+  }
+
+  public Vector getVelocity() {
+    return this.velocity;
+  }
+
+  public void setVelocity(Vector velocity) {
+    this.velocity = velocity;
   }
 
   public InputManager getInputManager() {
@@ -43,10 +53,8 @@ public class Player extends RenderedObject implements GameBehaviourUpdate, Input
 
     addShapeRenderer(new RectangleRenderer2D(Vector.one.multiply(1.25), Color.red, Vector.zero));
     addShapeRenderer(new RectangleRenderer2D(Vector.one, Color.orange, Vector.zero));
-  }
 
-  public Player(Transform transform) {
-    setTransform(transform);
+    addCollider(new RectangleCollider2D(Vector.one));
   }
 
   public Player() {}
@@ -57,11 +65,27 @@ public class Player extends RenderedObject implements GameBehaviourUpdate, Input
       .stream()
       .reduce(Vector.zero, (prev, current) -> prev.add(current));
 
-    final Vector velocity = inputMovementVector
-      .normalized()
-      .multiply(speed * Time.getDeltaTime() / 1000);
+    setVelocity(
+      inputMovementVector
+        .normalized()
+        .multiply(speed * Time.getDeltaTime() / 1000)
+    );
 
-    getTransform().translate(velocity);
+    Vector currentPosition = getTransform().getPosition();
+    Vector velocityX = new Vector(getVelocity().getX(), 0);
+    Vector velocityY = new Vector(0, getVelocity().getY());
+
+    if (!willCollide(currentPosition.add(velocityX))) {
+      getTransform().translate(velocityX);
+    } 
+    if (!willCollide(currentPosition.add(velocityY))) {
+      getTransform().translate(velocityY);
+    }
+
+  }
+
+  public void onCollision(CollidableObject other) {
+    // System.out.println(other);
   }
 
 }

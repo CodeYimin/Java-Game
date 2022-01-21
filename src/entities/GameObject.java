@@ -3,6 +3,10 @@ package entities;
 public class GameObject extends Object {
   private Transform transform;
 
+  public void setTransform(Transform transform) {
+    this.transform = transform;
+  }
+
   public GameObject(Transform transform) {
     this.transform = transform;
   }
@@ -13,10 +17,6 @@ public class GameObject extends Object {
   
   public Transform getTransform() {
     return this.transform;
-  }
-
-  public void setTransform(Transform transform) {
-    this.transform = transform;
   }
 
 }

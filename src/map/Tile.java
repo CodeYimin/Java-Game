@@ -1,12 +1,22 @@
 package map;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
-import entities.RenderedObject;
+import collision.RectangleCollider2D;
+import entities.CollidableObject;
+import rendering.RectangleRenderer2D;
 import rendering.ShapeRenderer2D;
 import util.Vector;
 
-public class Tile extends RenderedObject {
+public class Tile extends CollidableObject{
+  {
+    addShapeRenderer(new RectangleRenderer2D(Vector.one, Color.BLACK, Vector.zero));
+    addShapeRenderer(new RectangleRenderer2D(Vector.one.multiply(0.9), Color.MAGENTA, Vector.zero));
+
+    addCollider(new RectangleCollider2D(Vector.one));
+  }
+
   public Tile(Vector position) {
     getTransform().setPosition(position);
   }

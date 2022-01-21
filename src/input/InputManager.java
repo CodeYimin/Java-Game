@@ -76,12 +76,12 @@ public class InputManager extends KeyAdapter {
 
     addKeyUpdateListener((keyCodesHeld) -> {
       final ArrayList<T> activatedInputValues = keyCodesHeld
-      .keySet()
-      .stream()
-      .filter(inputMap::containsKey)
-      .map(inputMap::get)
-      .collect(Collectors.toCollection(ArrayList::new));
-      
+        .keySet()
+        .stream()
+        .filter(inputMap::containsKey)
+        .map(inputMap::get)
+        .collect(Collectors.toCollection(ArrayList::new));
+
       activatedValuesByBindName.put(name, activatedInputValues);
     });
   }
