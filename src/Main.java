@@ -1,5 +1,5 @@
-import panels.GamePanel;
-import window.GameWindow;
+import core.GamePanel;
+import core.GameWindow;
 
 public class Main {
 	public static final int FRAME_RATE = 60;

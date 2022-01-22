@@ -1,4 +1,4 @@
-package rendering;
+package rendering.topDown;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.RectangularShape;
 
 import entities.RenderableObject;
+import rendering.Camera;
 import util.Vector;
 
 public class TopDownCamera extends Camera {

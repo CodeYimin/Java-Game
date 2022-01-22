@@ -1,4 +1,4 @@
-package rendering;
+package rendering.topDown;
 
 import java.awt.Color;
 import java.awt.geom.RectangularShape;

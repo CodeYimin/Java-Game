@@ -3,13 +3,12 @@ package entities;
 import java.awt.Color;
 import java.util.ArrayList;
 
-import collision.RectangleCollider2D;
-import core.Time;
-import core.GameBehaviour.GameBehaviourUpdate;
+import collision.RectangleCollider;
+import core.gameBehaviour.GameBehaviourUpdate;
 import input.InputManageable;
 import input.InputManager;
 import input.InputMap;
-import rendering.RectangleRenderer2D;
+import rendering.topDown.RectangleRenderer2D;
 import util.Vector;
 
 public class Player extends CollidableObject implements GameBehaviourUpdate, InputManageable {
@@ -42,7 +41,7 @@ public class Player extends CollidableObject implements GameBehaviourUpdate, Inp
   }
 
   {
-    final InputMap<Vector> movementKeyMap = new InputMap<Vector>()
+    InputMap<Vector> movementKeyMap = new InputMap<Vector>()
       .set(38, Vector.up)
       .set(40, Vector.down)
       .set(37, Vector.left)
@@ -54,21 +53,21 @@ public class Player extends CollidableObject implements GameBehaviourUpdate, Inp
     addShapeRenderer(new RectangleRenderer2D(Vector.one.multiply(1.25), Color.red, Vector.zero));
     addShapeRenderer(new RectangleRenderer2D(Vector.one, Color.orange, Vector.zero));
 
-    addCollider(new RectangleCollider2D(Vector.one));
+    addCollider(new RectangleCollider(Vector.one));
   }
 
   public Player() {}
 
-  public void update() {
-    final ArrayList<Vector> inputMovementVectors = inputManager.getActivatedValuesByBindName("movement", Vector.class);
-    final Vector inputMovementVector = inputMovementVectors
+  public void update(long deltaTime) {
+    ArrayList<Vector> inputMovementVectors = inputManager.getActivatedValuesByBindName("movement", Vector.class);
+    Vector inputMovementVector = inputMovementVectors
       .stream()
       .reduce(Vector.zero, (prev, current) -> prev.add(current));
 
     setVelocity(
       inputMovementVector
         .normalized()
-        .multiply(speed * Time.getDeltaTime() / 1000)
+        .multiply(speed * deltaTime / 1000)
     );
 
     Vector currentPosition = getTransform().getPosition();

@@ -1,5 +1,5 @@
-package core.GameBehaviour;
+package core.gameBehaviour;
 
 public interface GameBehaviourUpdate {
-  public void update();
+  public void update(long deltaTime);
 }

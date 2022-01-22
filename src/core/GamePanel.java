@@ -1,32 +1,32 @@
-package panels;
+package core;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import collision.CollisionManager;
-import core.Time;
-import core.GameBehaviour.GameBehaviourPreUpdate;
-import core.GameBehaviour.GameBehaviourStart;
-import core.GameBehaviour.GameBehaviourUpdate;
+import core.gameBehaviour.GameBehaviourPreUpdate;
+import core.gameBehaviour.GameBehaviourStart;
+import core.gameBehaviour.GameBehaviourUpdate;
 import entities.Object;
 import entities.Player;
 import input.InputManageable;
-import map.MapRenderer;
+import map.TileMap;
 import rendering.Camera;
 import rendering.Drawable;
-import rendering.TopDownCamera;
+import rendering.topDown.TopDownCamera;
 
 public class GamePanel extends JPanel {
 
   private Player player;
+  private final Time time = new Time();
+
+  public Time getTime() {
+    return time;
+  }
 
   {
-    Object.instantiate(Time.getInstance());
-    Time.reset();
-
     player = new Player();
     Object.instantiate(player);
 
@@ -34,7 +34,7 @@ public class GamePanel extends JPanel {
     camera.setObjectFollowing(player);
     Object.instantiate(camera);
 
-    MapRenderer mapRenderer = new MapRenderer();
+    TileMap mapRenderer = new TileMap();
     Object.instantiate(mapRenderer);
 
     CollisionManager collisionManager = new CollisionManager();
@@ -61,6 +61,8 @@ public class GamePanel extends JPanel {
     super.paintComponent(graphics);
     resetGraphics(graphics);
 
+    getTime().updateDeltaTime();
+
     if (getIsFirstRender()) {
       Object.getObjectsByType(GameBehaviourStart.class)
         .stream()
@@ -74,11 +76,11 @@ public class GamePanel extends JPanel {
 
     Object.getObjectsByType(GameBehaviourPreUpdate.class)
       .stream()
-      .forEach(object -> object.preUpdate());
+      .forEach(object -> object.preUpdate(getTime().getDeltaTime()));
 
     Object.getObjectsByType(GameBehaviourUpdate.class)
       .stream()
-      .forEach(object -> object.update());
+      .forEach(object -> object.update(getTime().getDeltaTime()));
 
     Object.getObjectsByType(Drawable.class)
       .stream()

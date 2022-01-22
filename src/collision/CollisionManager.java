@@ -1,12 +1,12 @@
 package collision;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-import core.GameBehaviour.GameBehaviourPreUpdate;
+import core.gameBehaviour.GameBehaviourPreUpdate;
 import entities.CollidableObject;
 import entities.Object;
 import util.ArrayListUtil;
+import util.Vector;
 
 public class CollisionManager extends Object implements GameBehaviourPreUpdate {
 
@@ -20,9 +20,15 @@ public class CollisionManager extends Object implements GameBehaviourPreUpdate {
   }
 
   public static boolean testCollision(CollidableObject object1, CollidableObject object2) {
-    for (Collider2D collider1 : object1.getColliders()) {
-      for (Collider2D collider2 : object2.getColliders()) {
-        if (collider1.collidesWith(collider2, object1.getTransform().getPosition(), object2.getTransform().getPosition())) {
+    Vector pos1 = object1.getTransform().getPosition();
+    Vector pos2 = object2.getTransform().getPosition();
+
+    for (Collider collider1 : object1.getColliders()) {
+      for (Collider collider2 : object2.getColliders()) {
+        if (
+          collider1.collidesWith(collider2, pos1, pos2) ||
+          collider2.collidesWith(collider1, pos2, pos1)
+        ) {
           return true;
         }
       }
@@ -43,7 +49,7 @@ public class CollisionManager extends Object implements GameBehaviourPreUpdate {
     }
   }
 
-  public void preUpdate() {
+  public void preUpdate(long deltaTime) {
     detectCollision(getObjectsByType(CollidableObject.class));
   }
   

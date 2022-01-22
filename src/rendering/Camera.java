@@ -3,8 +3,7 @@ package rendering;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import core.GameBehaviour.GameBehaviourPreUpdate;
-import core.GameBehaviour.GameBehaviourUpdate;
+import core.gameBehaviour.GameBehaviourUpdate;
 import entities.GameObject;
 
 public abstract class Camera extends GameObject implements Drawable, GameBehaviourUpdate {
@@ -19,7 +18,7 @@ public abstract class Camera extends GameObject implements Drawable, GameBehavio
   }
 
   @Override
-  public void update() {
+  public void update(long deltaTime) {
     if (objectFollowing != null) {
       getTransform().setPosition(objectFollowing.getTransform().getPosition());
     }

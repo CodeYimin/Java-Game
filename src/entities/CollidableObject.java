@@ -1,33 +1,35 @@
 package entities;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
-import collision.Collider2D;
+import collision.Collider;
 import collision.CollisionManager;
-import core.Time;
 import util.Vector;
 
 public class CollidableObject extends RenderableObject {
-  private final ArrayList<Collider2D> colliders = new ArrayList<>();
+  private final ArrayList<Collider> colliders = new ArrayList<>();
 
-  public ArrayList<Collider2D> getColliders() {
+  public ArrayList<Collider> getColliders() {
     return this.colliders;
   }
 
-  public void addCollider(Collider2D collider) {
+  public void addCollider(Collider collider) {
     this.colliders.add(collider);
   }
 
-  public void addColliders(ArrayList<Collider2D> colliders) {
+  public void addColliders(ArrayList<Collider> colliders) {
     this.colliders.addAll(colliders);
   }
 
-  public void removeCollider(Collider2D collider) {
+  public void removeCollider(Collider collider) {
     this.colliders.remove(collider);
   }
 
-  public CollidableObject(ArrayList<Collider2D> colliders) {
+  public void removeAllColliders() {
+    this.colliders.clear();
+  }
+
+  public CollidableObject(ArrayList<Collider> colliders) {
     this.colliders.addAll(colliders);
   }
 

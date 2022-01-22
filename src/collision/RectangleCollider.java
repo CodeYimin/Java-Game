@@ -1,11 +1,8 @@
 package collision;
 
-import entities.CollidableObject;
-import entities.GameObject;
-import entities.Transform;
 import util.Vector;
 
-public class RectangleCollider2D implements Collider2D {
+public class RectangleCollider implements Collider {
   private Vector size;
 
   public Vector getSize() {
@@ -16,13 +13,13 @@ public class RectangleCollider2D implements Collider2D {
     this.size = size;
   }
 
-  public RectangleCollider2D(Vector size) {
+  public RectangleCollider(Vector size) {
     this.size = size;
   }
 
-  public boolean collidesWith(Collider2D otherCollider, Vector myPosition, Vector otherPosition) {
-    if (otherCollider instanceof RectangleCollider2D) {
-      RectangleCollider2D otherRect = (RectangleCollider2D) otherCollider;
+  public boolean collidesWith(Collider otherCollider, Vector myPosition, Vector otherPosition) {
+    if (otherCollider instanceof RectangleCollider) {
+      RectangleCollider otherRect = (RectangleCollider) otherCollider;
 
       double myTopEdge = myPosition.getY() + getSize().getY() / 2;
       double myBotEdge = myTopEdge - getSize().getY();

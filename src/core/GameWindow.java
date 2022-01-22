@@ -1,4 +1,4 @@
-package window;
+package core;
 
 import java.awt.Dimension;
 
