@@ -13,6 +13,8 @@ public class RayCast {
     T[][] tileMap,
     Function<T, Boolean> isSolid
   ) {
+    rayDirection.set(rayDirection.normalized());
+
     double yPerX = rayDirection.getY() / rayDirection.getX();
     double xPerY = rayDirection.getX() / rayDirection.getY();
 
@@ -29,7 +31,7 @@ public class RayCast {
       rayDirection.getY() > 0 ? 1 : -1
     );
 
-    // Checks for vertical sides
+    // Steps in X direction of grid by 1 each time, therefore checks for vertical sides
     double xCasterDistance =
       (
         rayDirection.getX() > 0
@@ -46,17 +48,17 @@ public class RayCast {
       ) *
       distPerY;
 
-    int currentCaster = 0;
+    RayCastSide sideChecking = null;
 
     T hitObject = null;
     while (hitObject == null) {
-      // Cast whichever ray was left behind by the other ray
+      // Add step to whichever ray was left behind by the other ray
       if (xCasterDistance < yCasterDistance) {
-        currentCaster = 0;
+        sideChecking = RayCastSide.VERTICAL;
         xCasterDistance += distPerX;
         rayCastTileMapPosition.addX(stepDirection.getX());
       } else {
-        currentCaster = 1;
+        sideChecking = RayCastSide.HORIZONTAL;
         yCasterDistance += distPerY;
         rayCastTileMapPosition.addY(stepDirection.getY());
       }
@@ -69,10 +71,15 @@ public class RayCast {
       }
     }
 
-    double rayCastDistance = currentCaster == 0
+    double rayCastDistance = sideChecking == RayCastSide.VERTICAL
       ? xCasterDistance - distPerX
       : yCasterDistance - distPerY;
 
-    return new RayCastHit<T>(rayCastDistance, hitObject);
+    return new RayCastHit<T>(
+      rayCastDistance,
+      hitObject,
+      sideChecking,
+      startingPosition.add(rayDirection.multiply(rayCastDistance))
+    );
   }
 }

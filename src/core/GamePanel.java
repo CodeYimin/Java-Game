@@ -19,7 +19,6 @@ import rendering.topDown.TopDownCamera;
 
 public class GamePanel extends JPanel {
 
-  private Player player;
   private final Time time = new Time();
 
   public Time getTime() {

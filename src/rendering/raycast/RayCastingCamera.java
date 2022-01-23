@@ -6,13 +6,17 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.stream.IntStream;
+import map.MapLayouts;
 import map.TileMap;
 import rendering.Camera;
+import util.MathUtil;
 import util.Vector;
 import util.rayCasting.RayCast;
 import util.rayCasting.RayCastHit;
+import util.rayCasting.RayCastSide;
 
 public class RayCastingCamera extends Camera {
 
@@ -49,14 +53,12 @@ public class RayCastingCamera extends Camera {
     double myAngle = getTransform().getAngle();
     Vector myDirection = Vector.fromGameDegrees(myAngle);
 
-    int rayAmount = 300;
-    Vector cameraPlaneDirection = myDirection.rotateGameDegrees(90);
+    int rayAmount = canvasSize.width / 2;
+    Vector cameraPlane = myDirection.rotateGameDegrees(90).multiply(1);
 
     for (int ray = 0; ray < rayAmount; ray++) {
       double cameraPlaneX = (double) ray / (rayAmount - 1) * 2 - 1;
-      Vector rayDirection = myDirection.add(
-        cameraPlaneDirection.multiply(cameraPlaneX)
-      );
+      Vector rayDirection = myDirection.add(cameraPlane.multiply(cameraPlaneX));
 
       RayCastHit<Integer> rayCastHit = RayCast.rayCast(
         myTileMapPosition,
@@ -68,24 +70,67 @@ public class RayCastingCamera extends Camera {
         tile -> tile != 0
       );
 
-      double rayCastDistance = rayCastHit.getDistance();
+      Vector hitPosition = rayCastHit.getPosition();
+      RayCastSide hitSide = rayCastHit.getSide();
+      int hitTile = rayCastHit.getObject();
 
-      double verticalLineHeight =
-        canvasSize.getHeight() /
-        (
-          Math.cos(rayDirection.toRadians() - myDirection.toRadians()) *
-          rayCastDistance
+      BufferedImage wallSprite = MapLayouts.getSpritesByInt().get(hitTile);
+
+      double hitDistance = rayCastHit.getDistance();
+      double perpendicularRayCastDistance =
+        Math.cos(rayDirection.toRadians() - myDirection.toRadians()) *
+        hitDistance;
+
+      double screenColumnHeight =
+        canvasSize.getHeight() / perpendicularRayCastDistance / 1.5;
+
+      double hitWallPositionDecimal;
+      if (hitSide == RayCastSide.HORIZONTAL) {
+        hitWallPositionDecimal = MathUtil.getDecimal(hitPosition.getX());
+      } else {
+        hitWallPositionDecimal = MathUtil.getDecimal(hitPosition.getY());
+      }
+
+      int textureSize = wallSprite.getWidth();
+      double texturePixelScreenHeight = screenColumnHeight / textureSize;
+
+      // Draw each texture pixel of the column
+      for (int row = 0; row < textureSize; row++) {
+        Color color = new Color(
+          wallSprite.getRGB(
+            (int) (hitWallPositionDecimal / 1 * textureSize),
+            row
+          )
         );
 
-      Rectangle2D verticalLine = new Rectangle2D.Double(
-        (double) ray / rayAmount * canvasSize.getWidth(),
-        canvasSize.getHeight() / 2 - verticalLineHeight / 2,
-        canvasSize.getWidth() / rayAmount,
-        verticalLineHeight
-      );
+        if (hitSide == RayCastSide.HORIZONTAL) {
+          color = color.darker();
+        }
 
-      graphics2D.setColor(Color.BLACK);
-      graphics2D.fill(verticalLine);
+        double halfScreenHeight = canvasSize.getHeight() / 2;
+        double halfColumnHeight = screenColumnHeight / 2;
+
+        Rectangle2D spritePixel = new Rectangle2D.Double(
+          (double) ray / rayAmount * canvasSize.getWidth(),
+          halfScreenHeight -
+          halfColumnHeight +
+          (texturePixelScreenHeight * row),
+          canvasSize.getWidth() / rayAmount,
+          texturePixelScreenHeight
+        );
+
+        graphics2D.setColor(color);
+        graphics2D.fill(spritePixel);
+      }
+      // Rectangle2D verticalLine = new Rectangle2D.Double(
+      //   (double) ray / rayAmount * canvasSize.getWidth(),
+      //   canvasSize.getHeight() / 2 - verticalLineHeight / 2,
+      //   canvasSize.getWidth() / rayAmount,
+      //   verticalLineHeight
+      // );
+
+      // graphics2D.setColor(color);
+      // graphics2D.fill(verticalLine);
     }
   }
 }
