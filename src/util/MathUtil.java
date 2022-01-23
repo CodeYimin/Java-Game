@@ -1,11 +1,12 @@
 package util;
 
 public class MathUtil {
-  public static int factorial(int number) {
-    int result = 1;
-    for (int i = 1; i < number; i++) {
-      result *= i;
-    }
-    return result;
+
+  public static double hypotenuse(double x, double y) {
+    return Math.sqrt(x * x + y * y);
+  }
+
+  public static double getDecimal(double number) {
+    return number - (int) number;
   }
 }

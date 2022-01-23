@@ -1,10 +1,10 @@
 package entities;
 
 import java.util.ArrayList;
-
 import rendering.topDown.ShapeRenderer2D;
 
-public class RenderableObject extends GameObject {
+public class RenderableObject2D extends GameObject {
+
   private final ArrayList<ShapeRenderer2D> shapeRenderers = new ArrayList<>();
 
   public ArrayList<ShapeRenderer2D> getShapeRenderers() {
@@ -27,10 +27,9 @@ public class RenderableObject extends GameObject {
     this.shapeRenderers.clear();
   }
 
-  public RenderableObject(ArrayList<ShapeRenderer2D> shapeRenderers) {
+  public RenderableObject2D(ArrayList<ShapeRenderer2D> shapeRenderers) {
     this.shapeRenderers.addAll(shapeRenderers);
   }
 
-  public RenderableObject() {
-  }
+  public RenderableObject2D() {}
 }

@@ -1,7 +1,7 @@
 package core;
 
-
 public class Time {
+
   private long lastUpdateTime;
   private int deltaTime;
 

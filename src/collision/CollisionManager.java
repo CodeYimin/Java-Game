@@ -1,16 +1,18 @@
 package collision;
 
-import java.util.ArrayList;
-
 import core.gameBehaviour.GameBehaviourPreUpdate;
 import entities.CollidableObject;
 import entities.Object;
+import java.util.ArrayList;
 import util.ArrayListUtil;
 import util.Vector;
 
 public class CollisionManager extends Object implements GameBehaviourPreUpdate {
 
-  public static boolean testCollision(CollidableObject testObject, ArrayList<CollidableObject> otherObjects) {
+  public static boolean testCollision(
+    CollidableObject testObject,
+    ArrayList<CollidableObject> otherObjects
+  ) {
     for (CollidableObject otherObject : otherObjects) {
       if (testCollision(testObject, otherObject)) {
         return true;
@@ -19,7 +21,10 @@ public class CollisionManager extends Object implements GameBehaviourPreUpdate {
     return false;
   }
 
-  public static boolean testCollision(CollidableObject object1, CollidableObject object2) {
+  public static boolean testCollision(
+    CollidableObject object1,
+    CollidableObject object2
+  ) {
     Vector pos1 = object1.getTransform().getPosition();
     Vector pos2 = object2.getTransform().getPosition();
 
@@ -37,7 +42,9 @@ public class CollisionManager extends Object implements GameBehaviourPreUpdate {
   }
 
   private void detectCollision(ArrayList<CollidableObject> objects) {
-    ArrayList<ArrayList<CollidableObject>> objectCombinations = ArrayListUtil.getAllUniquePairs(objects);
+    ArrayList<ArrayList<CollidableObject>> objectCombinations = ArrayListUtil.getAllUniquePairs(
+      objects
+    );
     for (ArrayList<CollidableObject> objectCombination : objectCombinations) {
       CollidableObject objectA = objectCombination.get(0);
       CollidableObject objectB = objectCombination.get(1);
@@ -52,5 +59,4 @@ public class CollisionManager extends Object implements GameBehaviourPreUpdate {
   public void preUpdate(long deltaTime) {
     detectCollision(getObjectsByType(CollidableObject.class));
   }
-  
 }

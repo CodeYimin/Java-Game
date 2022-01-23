@@ -1,15 +1,18 @@
 package collision;
 
 import java.util.Arrays;
-
 import util.Vector;
 
 public class TileMapCollider implements Collider {
+
+  private boolean[][] tileMap;
+  private double tileSize;
+
   public TileMapCollider(boolean[][] tileMap, double tileSize) {
     this.tileMap = tileMap;
     this.tileSize = tileSize;
   }
-  
+
   public boolean[][] getTileMap() {
     return this.tileMap;
   }
@@ -18,10 +21,10 @@ public class TileMapCollider implements Collider {
     return tileSize;
   }
 
-  private boolean[][] tileMap;
-  private double tileSize;
-
-  private boolean positionInTile(Vector myPosition, Vector positionToCheck) {
+  private boolean positionOverlapsTile(
+    Vector myPosition,
+    Vector positionToCheck
+  ) {
     boolean[][] tileMap = getTileMap();
     int tileMapHeight = tileMap.length;
     int tileMapWidth = tileMap[0].length;
@@ -29,7 +32,9 @@ public class TileMapCollider implements Collider {
     double leftX = myPosition.getX() - tileMapWidth * tileSize / 2;
     double topY = myPosition.getY() + tileMapHeight * tileSize / 2;
 
-    int tileMapX = (int) Math.floor((positionToCheck.getX() - leftX) / tileSize);
+    int tileMapX = (int) Math.floor(
+      (positionToCheck.getX() - leftX) / tileSize
+    );
     int tileMapY = (int) Math.floor((topY - positionToCheck.getY()) / tileSize);
 
     if (
@@ -42,21 +47,37 @@ public class TileMapCollider implements Collider {
     return tileMap[tileMapY][tileMapX];
   }
 
-  public boolean collidesWith(Collider other, Vector myPosition, Vector otherPosition) {
+  public boolean collidesWith(
+    Collider other,
+    Vector myPosition,
+    Vector otherPosition
+  ) {
     if (other instanceof RectangleCollider) {
       RectangleCollider otherRect = (RectangleCollider) other;
 
       Vector otherSize = otherRect.getSize();
 
       Vector otherBotLeft = otherPosition.subtract(otherSize.divide(2));
-      Vector otherBotRight = otherBotLeft.add(Vector.right.multiply(otherSize.getX()));
+      Vector otherBotRight = otherBotLeft.add(
+        Vector.RIGHT.multiply(otherSize.getX())
+      );
       Vector otherTopRight = otherPosition.add(otherSize.divide(2));
-      Vector otherTopLeft = otherTopRight.subtract(Vector.right.multiply(otherSize.getX()));
+      Vector otherTopLeft = otherTopRight.subtract(
+        Vector.RIGHT.multiply(otherSize.getX())
+      );
 
-      Vector[] positionsToCheck = new Vector[]{ otherBotLeft, otherBotRight, otherTopRight, otherTopLeft };
+      Vector[] positionsToCheck = new Vector[] {
+        otherBotLeft,
+        otherBotRight,
+        otherTopRight,
+        otherTopLeft,
+      };
 
-      return Arrays.stream(positionsToCheck)
-        .anyMatch((positionToCheck) -> positionInTile(myPosition, positionToCheck));
+      return Arrays
+        .stream(positionsToCheck)
+        .anyMatch(
+          positionToCheck -> positionOverlapsTile(myPosition, positionToCheck)
+        );
     }
 
     return false;

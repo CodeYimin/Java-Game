@@ -1,12 +1,13 @@
 package rendering.topDown;
 
 import java.awt.Color;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.RectangularShape;
-
 import util.Vector;
 
 public class RectangleRenderer2D implements ShapeRenderer2D {
+
   private Vector size;
   private Color color;
   private Vector offset;
@@ -15,6 +16,10 @@ public class RectangleRenderer2D implements ShapeRenderer2D {
     this.size = size;
     this.color = color;
     this.offset = offset;
+  }
+
+  public Stroke getStroke() {
+    return null;
   }
 
   public Color getColor() {
@@ -41,7 +46,7 @@ public class RectangleRenderer2D implements ShapeRenderer2D {
     this.size = size;
   }
 
-  public RectangularShape getShape(Vector centrePos, float zoom) {
+  public Shape getShape(Vector centrePos, float zoom) {
     Vector correctedPoint = centrePos
       .divide(zoom)
       .subtract(getSize().divide(2))
@@ -57,5 +62,4 @@ public class RectangleRenderer2D implements ShapeRenderer2D {
       correctedSize.getY()
     );
   }
-
 }

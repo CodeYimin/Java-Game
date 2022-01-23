@@ -1,12 +1,14 @@
 package rendering;
 
+import core.gameBehaviour.GameBehaviourUpdate;
+import entities.GameObject;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import core.gameBehaviour.GameBehaviourUpdate;
-import entities.GameObject;
+public abstract class Camera
+  extends GameObject
+  implements Drawable, GameBehaviourUpdate {
 
-public abstract class Camera extends GameObject implements Drawable, GameBehaviourUpdate {
   private GameObject objectFollowing;
 
   public GameObject getObjectFollowing() {
@@ -24,7 +26,5 @@ public abstract class Camera extends GameObject implements Drawable, GameBehavio
     }
   }
 
-  public void draw(Graphics graphics, Dimension canvasSize) {
-
-  }
+  public void draw(Graphics graphics, Dimension canvasSize) {}
 }

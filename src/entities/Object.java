@@ -1,13 +1,16 @@
 package entities;
 
+import core.gameBehaviour.GameBehaviourInstantiate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public abstract class Object {
+
   private static final ArrayList<Object> objects = new ArrayList<>();
 
   public static final <T> ArrayList<T> getObjectsByType(Class<T> type) {
-    ArrayList<T> objectsByType = Object.getObjects()
+    ArrayList<T> objectsByType = Object
+      .getObjects()
       .stream()
       .filter(type::isInstance)
       .map(type::cast)
@@ -22,6 +25,9 @@ public abstract class Object {
 
   public static void instantiate(Object object) {
     objects.add(object);
+    if (object instanceof GameBehaviourInstantiate) {
+      GameBehaviourInstantiate.class.cast(object).instantiate();
+    }
   }
 
   public static void destroy(Object object) {

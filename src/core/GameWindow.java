@@ -1,11 +1,11 @@
 package core;
 
 import java.awt.Dimension;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class GameWindow extends JFrame {
+
   public static final int DEFAULT_WIDTH = 800;
   public static final int DEFAULT_HEIGHT = 600;
 

@@ -3,6 +3,7 @@ package entities;
 import util.Vector;
 
 public class Transform {
+
   private Vector position;
   private double angle;
 
@@ -39,13 +40,23 @@ public class Transform {
 
   @Override
   public String toString() {
-    return "{" +
-      " position='" + getPosition() + "'" +
-      ", angle='" + getAngle() + "'" +
-      "}";
+    return (
+      "{" +
+      " position='" +
+      getPosition() +
+      "'" +
+      ", angle='" +
+      getAngle() +
+      "'" +
+      "}"
+    );
   }
 
   public void translate(Vector translation) {
-    this.setPosition(position.add(translation));
+    this.setPosition(getPosition().add(translation));
+  }
+
+  public void rotate(double degrees) {
+    this.setAngle(getAngle() + degrees);
   }
 }

@@ -2,17 +2,32 @@ package util;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 
 public class Vector {
-  public static final Vector zero = new Vector();
-  public static final Vector up = new Vector(0, 1);
-  public static final Vector right = new Vector(1, 0);
-  public static final Vector down = new Vector(0, -1);
-  public static final Vector left = new Vector(-1, 0);
-  public static final Vector one = new Vector(1, 1);
 
-  public static final Vector from(Point point) {
+  public static final Vector ZERO = new Vector();
+  public static final Vector UP = new Vector(0, 1);
+  public static final Vector RIGHT = new Vector(1, 0);
+  public static final Vector DOWN = new Vector(0, -1);
+  public static final Vector LEFT = new Vector(-1, 0);
+  public static final Vector ONE = new Vector(1, 1);
+
+  public static Vector fromPoint(Point point) {
     return new Vector(point.getX(), point.getY());
+  }
+
+  public static Vector fromRadians(double radians) {
+    return new Vector(Math.cos(radians), Math.sin(radians));
+  }
+
+  public static Vector fromMathDegrees(double angle) {
+    double radians = Math.toRadians(angle);
+    return fromRadians(radians);
+  }
+
+  public static Vector fromGameDegrees(double angle) {
+    return fromMathDegrees(90 - angle);
   }
 
   private double x;
@@ -28,7 +43,7 @@ public class Vector {
     this.y = y;
   }
 
-  public Vector() { }
+  public Vector() {}
 
   public double getX() {
     return this.x;
@@ -48,10 +63,7 @@ public class Vector {
 
   @Override
   public String toString() {
-    return "{" +
-      " x='" + getX() + "'" +
-      ", y='" + getY() + "'" +
-      "}";
+    return "{" + " x='" + getX() + "'" + ", y='" + getY() + "'" + "}";
   }
 
   public void set(Vector vector) {
@@ -103,8 +115,12 @@ public class Vector {
     return new Vector(getX() / amount, getY() / amount);
   }
 
+  public double getHypotenuse() {
+    return MathUtil.hypotenuse(getX(), getY());
+  }
+
   public Vector normalized() {
-    final double hypotenuse = Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
+    double hypotenuse = getHypotenuse();
 
     if (hypotenuse == 0) {
       return this;
@@ -118,8 +134,35 @@ public class Vector {
     return new Dimension((int) getX(), (int) getY());
   }
 
-  public Point toPoint() {
-    return new Point((int) getX(), (int) getY());
+  public Point2D toPoint2D() {
+    return new Point2D.Double(getX(), getY());
   }
 
+  public double toRadians() {
+    return Math.atan2(getY(), getX());
+  }
+
+  public double toMathDegrees() {
+    return Math.toDegrees(toRadians());
+  }
+
+  public double toGameDegrees() {
+    return 90 - toMathDegrees();
+  }
+
+  public Vector rotateRadians(double radians) {
+    return Vector.fromRadians(toRadians() + radians).multiply(getHypotenuse());
+  }
+
+  public Vector rotateGameDegrees(double degrees) {
+    return Vector
+      .fromGameDegrees(toGameDegrees() + degrees)
+      .multiply(getHypotenuse());
+  }
+
+  public Vector rotateMathDegrees(double degrees) {
+    return Vector
+      .fromMathDegrees(toMathDegrees() + degrees)
+      .multiply(getHypotenuse());
+  }
 }

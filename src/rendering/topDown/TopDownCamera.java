@@ -1,12 +1,13 @@
 package rendering.topDown;
 
+import entities.RenderableObject2D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.RectangularShape;
-
-import entities.RenderableObject;
+import java.awt.Shape;
+import java.awt.Stroke;
+import java.util.ArrayList;
 import rendering.Camera;
 import util.Vector;
 
@@ -26,7 +27,10 @@ public class TopDownCamera extends Camera {
     zoom = 50;
   }
 
-  private Vector deltaPositionToScreenPosition(Vector deltaPosition, Dimension canvasSize) {
+  private Vector deltaPositionToScreenPosition(
+    Vector deltaPosition,
+    Dimension canvasSize
+  ) {
     return new Vector(
       deltaPosition.getX() * zoom + canvasSize.getWidth() / 2,
       -deltaPosition.getY() * zoom + canvasSize.getHeight() / 2
@@ -39,23 +43,20 @@ public class TopDownCamera extends Camera {
 
     Vector myPosition = getTransform().getPosition();
 
-    RenderableObject[] renderedObjects = getObjects()
-      .stream()
-      .filter(RenderableObject.class::isInstance)
-      .map(RenderableObject.class::cast)
-      .toArray(RenderableObject[]::new);
+    ArrayList<RenderableObject2D> renderableObjects = getObjectsByType(
+      RenderableObject2D.class
+    );
 
-    for (RenderableObject renderedObject : renderedObjects) {
-
-      Vector deltaPosition = renderedObject
+    for (RenderableObject2D renderableObject : renderableObjects) {
+      Vector deltaPosition = renderableObject
         .getTransform()
         .getPosition()
         .subtract(myPosition);
 
-      for (ShapeRenderer2D renderer : renderedObject.getShapeRenderers()) {
-
+      for (ShapeRenderer2D renderer : renderableObject.getShapeRenderers()) {
         Color color = renderer.getColor();
-        RectangularShape shape = renderer.getShape(
+        Stroke stroke = renderer.getStroke();
+        Shape shape = renderer.getShape(
           deltaPositionToScreenPosition(deltaPosition, canvasSize),
           getZoom()
         );
@@ -63,8 +64,11 @@ public class TopDownCamera extends Camera {
         graphics2D.setColor(color);
         graphics2D.fill(shape);
 
+        if (stroke != null) {
+          graphics2D.setStroke(stroke);
+          graphics2D.draw(shape);
+        }
       }
-
     }
   }
 }

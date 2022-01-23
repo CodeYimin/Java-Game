@@ -1,12 +1,12 @@
 package entities;
 
-import java.util.ArrayList;
-
 import collision.Collider;
 import collision.CollisionManager;
+import java.util.ArrayList;
 import util.Vector;
 
-public class CollidableObject extends RenderableObject {
+public class CollidableObject extends RenderableObject2D {
+
   private final ArrayList<Collider> colliders = new ArrayList<>();
 
   public ArrayList<Collider> getColliders() {
@@ -33,9 +33,7 @@ public class CollidableObject extends RenderableObject {
     this.colliders.addAll(colliders);
   }
 
-  public CollidableObject() {
-
-  }
+  public CollidableObject() {}
 
   public void onCollision(CollidableObject other) {}
 
@@ -43,7 +41,9 @@ public class CollidableObject extends RenderableObject {
     CollidableObject testObject = new CollidableObject(getColliders());
     testObject.getTransform().setPosition(position);
 
-    ArrayList<CollidableObject> otherCollidable = getObjectsByType(CollidableObject.class);
+    ArrayList<CollidableObject> otherCollidable = getObjectsByType(
+      CollidableObject.class
+    );
     otherCollidable.remove(this);
     otherCollidable.remove(testObject);
 
