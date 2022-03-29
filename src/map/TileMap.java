@@ -25,7 +25,7 @@ public class TileMap extends CollidableObject {
     return this.layout;
   }
 
-  public Vector toTileMapPosition(Vector worldPosition) {
+  public Vector toTileMapDecimalPosition(Vector worldPosition) {
     int mapHeight = getLayout().length;
     int mapWidth = getLayout()[0].length;
 

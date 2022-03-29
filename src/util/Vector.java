@@ -21,13 +21,13 @@ public class Vector {
     return new Vector(Math.cos(radians), Math.sin(radians));
   }
 
-  public static Vector fromMathDegrees(double angle) {
+  public static Vector fromMathAngle(double angle) {
     double radians = Math.toRadians(angle);
     return fromRadians(radians);
   }
 
-  public static Vector fromGameDegrees(double angle) {
-    return fromMathDegrees(90 - angle);
+  public static Vector fromGameAngle(double angle) {
+    return fromMathAngle(90 - angle);
   }
 
   private double x;
@@ -142,12 +142,12 @@ public class Vector {
     return Math.atan2(getY(), getX());
   }
 
-  public double toMathDegrees() {
+  public double toMathAngle() {
     return Math.toDegrees(toRadians());
   }
 
-  public double toGameDegrees() {
-    return 90 - toMathDegrees();
+  public double toGameAngle() {
+    return 90 - toMathAngle();
   }
 
   public Vector rotateRadians(double radians) {
@@ -156,13 +156,13 @@ public class Vector {
 
   public Vector rotateGameDegrees(double degrees) {
     return Vector
-      .fromGameDegrees(toGameDegrees() + degrees)
+      .fromGameAngle(toGameAngle() + degrees)
       .multiply(getHypotenuse());
   }
 
   public Vector rotateMathDegrees(double degrees) {
     return Vector
-      .fromMathDegrees(toMathDegrees() + degrees)
+      .fromMathAngle(toMathAngle() + degrees)
       .multiply(getHypotenuse());
   }
 }

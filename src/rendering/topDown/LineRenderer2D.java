@@ -37,7 +37,7 @@ public class LineRenderer2D implements ShapeRenderer2D {
     Vector offset
   ) {
     this.length = length;
-    this.angle = direction.toGameDegrees();
+    this.angle = direction.toGameAngle();
     this.color = color;
     this.thickness = thickness;
     this.offset = offset;
@@ -96,7 +96,7 @@ public class LineRenderer2D implements ShapeRenderer2D {
     Vector secondPoint = offsettedPoint
       .divide(zoom)
       .add(
-        Vector.fromGameDegrees(getAngle()).multiply(getLength()).multiply(1, -1)
+        Vector.fromGameAngle(getAngle()).multiply(getLength()).multiply(1, -1)
       )
       .multiply(zoom);
 

@@ -40,7 +40,7 @@ public class RayCastVisualizer
     removeAllShapeRenderers();
 
     Vector myTileMapPosition = getTileMap()
-      .toTileMapPosition(getTransform().getPosition());
+      .toTileMapDecimalPosition(getTransform().getPosition());
 
     double myAngle = getTransform().getAngle();
 
@@ -50,7 +50,7 @@ public class RayCastVisualizer
     for (int ray = 0; ray < rayAmount; ray++) {
       double rayAngle =
         myAngle + (double) ray / (rayAmount - 1) * fov - fov / 2;
-      Vector rayDirection = Vector.fromGameDegrees(rayAngle);
+      Vector rayDirection = Vector.fromGameAngle(rayAngle);
 
       RayCastHit<Integer> rayCastHit = RayCast.rayCast(
         myTileMapPosition,
